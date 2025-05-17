@@ -24,7 +24,7 @@ const Cart = () => {
   return (
     <div className={styles.cart_container}>
       {/* when user adds items in cart then this count to be handled */}
-      <Header count={cart.totalProducts} />
+      <Header count={cart.totalQuantity} />
 
       <div className={styles.shopping_cart_container}>
         <h2>Shopping Cart</h2>
@@ -33,7 +33,7 @@ const Cart = () => {
         <p className={styles.count_subtitle}>
           You have{" "}
           <span className={styles.count}>
-            {cart.totalProducts > 0 ? cart.totalProducts : "no"}{" "}
+            {cart.totalProducts > 0 ? cart.totalQuantity : "no"}{" "}
           </span>
           items in Shopping cart
         </p>
@@ -54,7 +54,7 @@ const Cart = () => {
             <PrimaryButton
               label="CHECKOUT"
               disabled={false}
-              onClick={undefined}
+              onClick={() => console.log("checkout")}
             />
             <PrimaryButton
               label="CLEAR ALL"

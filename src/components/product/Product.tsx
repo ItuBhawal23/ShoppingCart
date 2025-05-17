@@ -12,7 +12,6 @@ type ProductProps = {
 };
 
 const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
-  
   return (
     <Row className={styles.product_row}>
       <Col span={8}>
@@ -26,21 +25,33 @@ const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
       </Col>
       <Col span={8}>
         <div className={styles.increment_decrement_box}>
-          <AiOutlinePlus
-            size={20}
-            className={styles.plus_icon}
-            onClick={() => updateQuantity(product, "increment")}
-          />
-          <div className={styles.count_box}>
-            <p>{product.quantity}</p>
+          <div className={styles.increment_decrement_input}>
+            {product.quantity === 1 ? (
+              <BsFillTrash3Fill
+                size={16}
+                className={styles.delete_icon}
+                onClick={onDelete}
+              />
+            ) : (
+              <AiOutlineMinus
+                size={20}
+                className={styles.minus_icon}
+                onClick={() => updateQuantity(product, "decrement")}
+              />
+            )}
+            <div className={styles.count_box}>
+              <p>{product.quantity}</p>
+            </div>
+            <AiOutlinePlus
+              size={20}
+              className={styles.plus_icon}
+              onClick={() => updateQuantity(product, "increment")}
+            />
           </div>
-          <AiOutlineMinus
-            size={20}
-            className={`${styles.minus_icon} ${
-              product.quantity == 0 ? styles.disable_icon : ""
-            }`}
-            onClick={() => updateQuantity(product, "decrement")}
-          />
+
+          {/* <p className={styles.message}>
+            {product.quantity > 5 ? "Max 5 items can be selected" : ""}
+          </p> */}
         </div>
       </Col>
       <Col span={4}>

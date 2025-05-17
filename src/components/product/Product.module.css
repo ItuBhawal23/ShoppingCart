@@ -23,9 +23,19 @@
 
   .increment_decrement_box {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    .increment_decrement_input {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .message {
+      margin-top: 8px;
+      color: red;
+    }
 
     .count_box {
       width: 40px;
@@ -44,10 +54,6 @@
       .minus_icon {
         cursor: pointer;
       }
-      .disable_icon{
-        pointer-events: none;
-        opacity: 0.5;
-      }
     }
   }
   .delete_product {
@@ -55,8 +61,8 @@
     align-items: flex-end;
     justify-content: flex-end;
     color: red;
-    .delete_icon{
-        cursor: pointer;
+    .delete_icon {
+      cursor: pointer;
     }
   }
 }

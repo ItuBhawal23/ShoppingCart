@@ -83,65 +83,38 @@ export const CartContextProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  // TODO: Optimize it
+  //  Handle the increment and decrement of product quantity
   const updateQuantity = (product: IProduct, action: string) => {
     console.log("product", product, action);
 
-    if (action === "increment") {
-      setCart((prev: any) => {
-        const productIndex = prev.products.findIndex(
-          (prod: IProduct) => prod.id === product.id
-        );
+    setCart((prev: any) => {
+      const productIndex = prev.products.findIndex(
+        (prod: IProduct) => prod.id === product.id
+      );
 
-        if (productIndex === -1) return;
+      if (productIndex === -1) return;
 
-        const currentProduct = prev.products[productIndex];
-        const updatedProduct = {
-          ...currentProduct,
-          quantity: product.quantity + 1,
-          total: currentProduct.total + currentProduct.price
-        };
+      const currentProduct = prev.products[productIndex];
+      const updatedProduct = {
+        ...currentProduct,
+        quantity:
+          action === "increment" ? product.quantity + 1 : product.quantity - 1,
+        total: currentProduct.total + currentProduct.price
+      };
 
-        const updatedProducts = [...prev.products];
-        updatedProducts[productIndex] = updatedProduct;
+      const updatedProducts = [...prev.products];
+      updatedProducts[productIndex] = updatedProduct;
 
-        return {
-          ...prev,
-          products: updatedProducts,
-          totalQuantity: prev.totalQuantity + 1,
-          total: prev.total + currentProduct.price
-        };
-      });
-    }
-
-    if (action === "decrement") {
-      if (product.quantity === 0) return;
-
-      setCart((prev: any) => {
-        const productIndex = prev.products.findIndex(
-          (prod: IProduct) => prod.id === product.id
-        );
-
-        if (productIndex === -1) return;
-
-        const currentProduct = prev.products[productIndex];
-        const updatedProduct = {
-          ...currentProduct,
-          quantity: product.quantity - 1,
-          total: currentProduct.total - currentProduct.price
-        };
-
-        const updatedProducts = [...prev.products];
-        updatedProducts[productIndex] = updatedProduct;
-
-        return {
-          ...prev,
-          products: updatedProducts,
-          totalQuantity: prev.totalQuantity - 1,
-          total: prev.total - currentProduct.price
-        };
-      });
-    }
+      return {
+        ...prev,
+        products: updatedProducts,
+        totalQuantity:
+          action === "increment"
+            ? prev.totalQuantity + 1
+            : prev.totalQuantity - 1,
+        total: prev.total + currentProduct.price
+      };
+    });
   };
 
   // Function to clear all items in cart
