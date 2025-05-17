@@ -4,14 +4,15 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AiOutlineMinus } from "react-icons/ai";
 import styles from "./Product.module.css";
 import type { IProduct } from "../../interface/CartType";
+import { useCartContext } from "../../context/cartContext";
 
 type ProductProps = {
   product: IProduct;
-  onDelete: any;
-  updateQuantity: (product: IProduct, action: string) => void;
 };
 
-const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
+const Product = ({ product }: ProductProps) => {
+  const { updateQuantity, onProductDelete } = useCartContext();
+
   return (
     <Row className={styles.product_row}>
       <Col span={8}>
@@ -30,7 +31,7 @@ const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
               <BsFillTrash3Fill
                 size={16}
                 className={styles.delete_icon}
-                onClick={onDelete}
+                onClick={() => onProductDelete(product)}
               />
             ) : (
               <AiOutlineMinus
@@ -61,7 +62,7 @@ const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
         <BsFillTrash3Fill
           size={16}
           className={styles.delete_icon}
-          onClick={onDelete}
+          onClick={() => onProductDelete(product)}
         />
       </Col>
     </Row>

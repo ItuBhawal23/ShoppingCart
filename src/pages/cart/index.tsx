@@ -6,18 +6,12 @@ import Product from "../../components/product/Product";
 import Loader from "../../components/loader";
 
 const Cart = () => {
-  const { cart, isLoading, onClearAll, onProductDelete, updateQuantity } =
-    useCartContext();
+  const { cart, isLoading, onClearAll } = useCartContext();
 
   const renderProducts = () => {
     const tempCarts = { ...cart };
     return tempCarts?.products.map((product, index) => (
-      <Product
-        key={index}
-        product={product}
-        onDelete={() => onProductDelete(product)}
-        updateQuantity={updateQuantity}
-      />
+      <Product key={index} product={product} />
     ));
   };
 
