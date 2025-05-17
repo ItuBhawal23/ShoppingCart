@@ -1,129 +1,25 @@
-import { useEffect, useState } from "react";
-import Product from "../../components/product/Product";
 import Header from "../../components/header";
 import PrimaryButton from "../../components/button";
-import { CartApi } from "../../api/carts-api";
-import type { CartType, IProduct } from "../../interface/CartType";
 import styles from "./Cart.module.css";
+import { useCartContext } from "../../context/cartContext";
+import Product from "../../components/product/Product";
+import Loader from "../../components/loader";
 
 const Cart = () => {
-  const [cart, setCart] = useState<CartType>({
-    id: 0,
-    discountedTotal: 0,
-    total: 0,
-    totalProducts: 0,
-    totalQuantity: 0,
-    userId: 0,
-    products: []
-  });
-
-  const getCarts = async () => {
-    try {
-      const allCarts = await CartApi();
-      console.log("carts", allCarts);
-
-      setCart(allCarts);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //Delete Product
-  const onProductDelete = (product: IProduct) => {
-    const tempCarts = { ...cart };
-
-    const productIndex = tempCarts.products.findIndex(
-      (p) => p.id == product.id
-    );
-
-    if (productIndex !== -1) {
-      const removedProduct = tempCarts.products.splice(productIndex, 1);
-
-      setCart((prev: any) => {
-        return {
-          ...prev,
-          products: tempCarts.products,
-          totalProducts: tempCarts.products?.length,
-          totalQuantity: tempCarts.totalQuantity - removedProduct[0].quantity
-        };
-      });
-    } else {
-      console.error("Product not found");
-    }
-  };
-
-  // TODO: Optimize it
-  const updateQuantity = (product: IProduct, action: string) => {
-    console.log("product", product, action);
-
-    if (action === "increment") {
-      setCart((prev: any) => {
-        console.log("prev", prev);
-        const productIndex = prev.products.findIndex(
-          (prod: IProduct) => prod.id === product.id
-        );
-
-        const updatedProducts = {
-          ...prev.products[productIndex],
-          quantity: product.quantity + 1
-        };
-
-        return {
-          ...prev,
-          products: prev.products.map((p: IProduct, index: number) =>
-            index === productIndex ? updatedProducts : p
-          ),
-          totalQuantity: prev.totalQuantity + 1
-        };
-      });
-    }
-
-    if (action === "decrement") {
-      setCart((prev: any) => {
-        console.log("prev", prev);
-        const productIndex = prev.products.findIndex(
-          (prod: IProduct) => prod.id === product.id
-        );
-
-        const updatedProducts = {
-          ...prev.products[productIndex],
-          quantity: product.quantity - 1
-        };
-
-        return {
-          ...prev,
-          products: prev.products.map((p: IProduct, index: number) =>
-            index === productIndex ? updatedProducts : p
-          ),
-          totalQuantity: prev.totalQuantity - 1
-        };
-      });
-    }
-  };
+  const { cart, isLoading, onClearAll, onProductDelete, updateQuantity } =
+    useCartContext();
 
   const renderProducts = () => {
     const tempCarts = { ...cart };
-    return (
-      <>
-        {tempCarts?.products?.length ? (
-          tempCarts?.products.map((product, index) => (
-            <Product
-              key={index}
-              product={product}
-              onDelete={() => onProductDelete(product)}
-              updateQuantity={updateQuantity}
-            />
-          ))
-        ) : (
-          <p className={styles.empty_cart}>Your Cart is Empty :(</p>
-        )}
-      </>
-    );
+    return tempCarts?.products.map((product, index) => (
+      <Product
+        key={index}
+        product={product}
+        onDelete={() => onProductDelete(product)}
+        updateQuantity={updateQuantity}
+      />
+    ));
   };
-
-  useEffect(() => {
-    getCarts();
-  }, []);
 
   return (
     <div className={styles.cart_container}>
@@ -135,24 +31,36 @@ const Cart = () => {
 
         {/* when user adds items in cart then this count to be handled */}
         <p className={styles.count_subtitle}>
-          You have <span className={styles.count}>{cart.totalProducts} </span>
+          You have{" "}
+          <span className={styles.count}>
+            {cart.totalProducts > 0 ? cart.totalProducts : "no"}{" "}
+          </span>
           items in Shopping cart
         </p>
 
-        <div className={styles.product_container}> {renderProducts()}</div>
+        <div className={styles.product_container}>
+          {isLoading ? (
+            <Loader isLoading={isLoading} />
+          ) : cart.products.length ? (
+            renderProducts()
+          ) : (
+            <p className={styles.empty_cart}>Your Cart is Empty :(</p>
+          )}
+        </div>
 
         <div className={styles.bottom_container}>
-          <h3>Cart Total: {cart.total}</h3>
+          <h3>Cart Total: {cart.total.toFixed(2)}</h3>
           <div className={styles.action_container}>
             <PrimaryButton
-              label={"CHECKOUT"}
+              label="CHECKOUT"
               disabled={false}
               onClick={undefined}
             />
             <PrimaryButton
-              label={"CLEAR ALL"}
-              disabled={false}
-              onClick={undefined}
+              label="CLEAR ALL"
+              disabled={!cart.products?.length}
+              onClick={() => onClearAll()}
+              color="danger"
             />
           </div>
         </div>

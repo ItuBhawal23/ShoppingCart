@@ -30,8 +30,8 @@
     .count_box {
       width: 40px;
       border-radius: 4px;
-      background-color: lightgray;
-      border: 1px solid #92929e;
+      background-color: #e5e5e5;
+      border: 1px solid #cccccc;
       padding: 3px 4px;
       margin: 0 8px;
       display: flex;
@@ -43,6 +43,10 @@
       }
       .minus_icon {
         cursor: pointer;
+      }
+      .disable_icon{
+        pointer-events: none;
+        opacity: 0.5;
       }
     }
   }

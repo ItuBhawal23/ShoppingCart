@@ -12,6 +12,7 @@ type ProductProps = {
 };
 
 const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
+  
   return (
     <Row className={styles.product_row}>
       <Col span={8}>
@@ -35,16 +36,22 @@ const Product = ({ product, updateQuantity, onDelete }: ProductProps) => {
           </div>
           <AiOutlineMinus
             size={20}
-            className={styles.minus_icon}
+            className={`${styles.minus_icon} ${
+              product.quantity == 0 ? styles.disable_icon : ""
+            }`}
             onClick={() => updateQuantity(product, "decrement")}
           />
         </div>
       </Col>
       <Col span={4}>
-        <p>{product.total}₹</p>
+        <p>{product.total.toFixed(2)}₹</p>
       </Col>
       <Col span={4} className={styles.delete_product}>
-        <BsFillTrash3Fill className={styles.delete_icon} onClick={onDelete} />
+        <BsFillTrash3Fill
+          size={16}
+          className={styles.delete_icon}
+          onClick={onDelete}
+        />
       </Col>
     </Row>
   );
